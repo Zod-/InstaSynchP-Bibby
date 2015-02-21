@@ -3,13 +3,13 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1
+// @version     1.0.1
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
 
-// @include     *://instasync.com/r/bibby
-// @include     *://*.instasync.com/r/bibby
+// @include     *://instasync.com/r/*
+// @include     *://*.instasync.com/r/*
 // @grant       none
 // @run-at      document-start
 
@@ -51,6 +51,9 @@ Bibby.prototype.wallcounterNotification = function (video) {
 UserSpy.prototype.postConnect = function () {
   "use strict";
   var th = this;
+  if(window.room.roomName.toLowerCase() !== 'bibby'){
+    return;
+  }
   //add events after we connected so it doesn't spam the chat
   events.on(th, 'AddVideo', th.wallcounterNotification);
 };
@@ -63,4 +66,4 @@ Bibby.prototype.resetVariables = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1');
+window.plugins.bibby = new Bibby('1.0.1');
