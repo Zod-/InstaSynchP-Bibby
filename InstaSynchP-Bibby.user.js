@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.0.5
+// @version     1.0.6
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -65,7 +65,9 @@ Bibby.prototype.wallcounterNotificationOnce = function () {
 };
 
 Bibby.prototype.checkCounter = function (video) {
-  var message, counter;
+  "use strict";
+  var message, counter,
+    wallcounter = window.plugins.wallcounter;
   //wallcounter not installed
   counter = wallcounter.counter[video.addedby.toLowerCase()];
   if (isUdef(counter) || counter.duration < 60 * 60) {
@@ -114,4 +116,4 @@ Bibby.prototype.resetVariables = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.0.5');
+window.plugins.bibby = new Bibby('1.0.6');
