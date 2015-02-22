@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.0.3
+// @version     1.0.4
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -27,6 +27,7 @@ function Bibby(version) {
     'default': false,
     'section': ['Bibby']
   }];
+  this.isBibby = false;
 }
 
 Bibby.prototype.wallcounterNotificationOnce = function () {
@@ -92,13 +93,14 @@ Bibby.prototype.wallcounterNotification = function () {
 Bibby.prototype.executeOnce = function () {
   "use strict";
   var th = this;
+  th.isBibby = (window.room.roomName.toLowerCase() === 'bibby');
   th.wallcounterNotificationOnce();
 };
 
 Bibby.prototype.postConnect = function () {
   "use strict";
   var th = this;
-  if (window.room.roomName.toLowerCase() !== 'bibby') {
+  if(!th.isBibby){
     return;
   }
   th.wallcounterNotification();
@@ -112,4 +114,4 @@ Bibby.prototype.resetVariables = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.0.3');
+window.plugins.bibby = new Bibby('1.0.4');
