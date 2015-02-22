@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.0.4
+// @version     1.0.5
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -64,6 +64,22 @@ Bibby.prototype.wallcounterNotificationOnce = function () {
   };
 };
 
+Bibby.prototype.checkCounter = function (video) {
+  var message, counter;
+  //wallcounter not installed
+  counter = wallcounter.counter[video.addedby.toLowerCase()];
+  if (isUdef(counter) || counter.duration < 60 * 60) {
+    //nothing to report
+    return;
+  }
+  message = 'Wallcounter {0}[{1} - {2}]'.format(
+    counter.origName,
+    window.utils.secondsToTime(counter.duration),
+    counter.count);
+  addErrorMessage(message);
+};
+
+
 Bibby.prototype.wallcounterNotification = function () {
   "use strict";
   var th = this,
@@ -71,23 +87,7 @@ Bibby.prototype.wallcounterNotification = function () {
   if (isUdef(wallcounter)) {
     return;
   }
-
-  function checkCounter(video) {
-    var message, counter;
-    //wallcounter not installed
-    counter = wallcounter.counter[video.addedby.toLowerCase()];
-    if (isUdef(counter) || counter.duration < 60 * 60) {
-      //nothing to report
-      return;
-    }
-    message = 'Wallcounter {0}[{1} - {2}]'.format(
-      counter.origName,
-      window.utils.secondsToTime(counter.duration),
-      counter.count);
-    addErrorMessage(message);
-  }
-
-  events.on(th, 'AddVideo', checkCounter);
+  events.on(th, 'AddVideo', th.checkCounter);
 };
 
 Bibby.prototype.executeOnce = function () {
@@ -100,7 +100,7 @@ Bibby.prototype.executeOnce = function () {
 Bibby.prototype.postConnect = function () {
   "use strict";
   var th = this;
-  if(!th.isBibby){
+  if (!th.isBibby) {
     return;
   }
   th.wallcounterNotification();
@@ -110,8 +110,8 @@ Bibby.prototype.postConnect = function () {
 Bibby.prototype.resetVariables = function () {
   "use strict";
   var th = this;
-  events.unbind('AddVideo', th.wallcounterNotification);
+  events.unbind('AddVideo', th.checkCounter);
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.0.4');
+window.plugins.bibby = new Bibby('1.0.5');
