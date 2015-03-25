@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.0.7
+// @version     1.0.8
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -40,15 +40,11 @@ Bibby.prototype.wallcounterNotificationOnce = function () {
   wallcounter.formatOutput = function (counts) {
     var output = "Wallcounter<br>";
     counts.forEach(function (count, index) {
-      var text = "{0}[<b>{2}</b> - {1}] - ";
       if (count.duration > 60 * 60) {
-        text = '<span style="color:red">{0}[<b>{2}</b> - {1}]</span> - ';
+        output += count.format('<span style="color:red">{0}[<b>{1}</b> - {2}]</span> - ');
+      } else {
+        output += count.format('{0}[<b>{1}</b> - {2}] - ');
       }
-      output += text.format(
-        count.origName,
-        count.count,
-        utils.secondsToTime(count.duration)
-      );
       //2 counters per line
       if ((index + 1) % 2 === 0) {
         //remove " - "
@@ -119,4 +115,4 @@ Bibby.prototype.resetVariables = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.0.7');
+window.plugins.bibby = new Bibby('1.0.8');
