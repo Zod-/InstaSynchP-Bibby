@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.0.9
+// @version     1.1.0
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -30,59 +30,45 @@ function Bibby(version) {
   this.isBibby = false;
 }
 
-Bibby.prototype.wallcounterNotificationOnce = function () {
+Bibby.prototype.overwriteWallCreateFormat = function () {
   "use strict";
   var th = this,
     wallcounter = window.plugins.wallcounter;
   if (isUdef(wallcounter)) {
     return;
   }
-  wallcounter.formatOutput = function (counts) {
-    var output = "Wallcounter<br>";
-    counts.forEach(function (count, index) {
-      if (count.duration > 60 * 60) {
-        output += count.format('<span style="color:red">{0}[<b>{1}</b> - {2}]</span> - ');
-      } else {
-        output += count.format('{0}[<b>{1}</b> - {2}] - ');
-      }
-      //2 counters per line
-      if ((index + 1) % 2 === 0) {
-        //remove " - "
-        output = output.substring(0, output.length - 3);
-        output += '<br>';
-      }
-    });
-    //remove " - "
-    if (counts.length % 2 === 1) {
-      output = output.substring(0, output.length - 3);
+  var oldCreateFormat = wallcounter.Wall.prototype.createFormat;
+  wallcounter.Wall.prototype.createFormat = function () {
+    var thth = this;
+    if (thth.duration > 60 * 60) {
+      return '<span style="color:red">' + oldCreateFormat.apply(thth, arguments) + '</span>';
+    } else {
+      return oldCreateFormat.apply(thth, arguments);
     }
-    return output;
   };
 };
 
-Bibby.prototype.checkCounter = function (video) {
+Bibby.prototype.checkWall = function (video) {
   "use strict";
-  var message, counter,
+  var message, wall,
     wallcounter = window.plugins.wallcounter;
-  //wallcounter not installed
-  counter = wallcounter.counter[video.addedby.toLowerCase()];
-  if (isUdef(counter) || counter.duration < 60 * 60) {
-    //nothing to report
+
+  if (isUdef(wallcounter)) {
     return;
   }
-  message = counter.format('Wallcounter {0}[{1} - {2}]');
+  wall = wallcounter.walls[video.addedby.toLowerCase()];
+  if (isUdef(wall) || wall.duration < 60 * 60) {
+    return;
+  }
+  message = wall.format('Wallcounter {0}', '{1}', '{2}');
   addErrorMessage(message);
 };
 
 
 Bibby.prototype.wallcounterNotification = function () {
   "use strict";
-  var th = this,
-    wallcounter = window.plugins.wallcounter;
-  if (isUdef(wallcounter)) {
-    return;
-  }
-  events.on(th, 'AddVideo', th.checkCounter);
+  var th = this;
+  events.on(th, 'AddVideo', th.checkWall);
 };
 
 Bibby.prototype.executeOnce = function () {
@@ -92,7 +78,7 @@ Bibby.prototype.executeOnce = function () {
   if (!th.isBibby) {
     return;
   }
-  th.wallcounterNotificationOnce();
+  th.overwriteWallCreateFormat();
 };
 
 Bibby.prototype.postConnect = function () {
@@ -108,8 +94,8 @@ Bibby.prototype.postConnect = function () {
 Bibby.prototype.resetVariables = function () {
   "use strict";
   var th = this;
-  events.unbind('AddVideo', th.checkCounter);
+  events.unbind('AddVideo', th.checkWall);
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.0.9');
+window.plugins.bibby = new Bibby('1.1.0');
