@@ -17,39 +17,40 @@
 // ==/UserScript==
 
 function Bibby(version) {
-  "use strict";
+  'use strict';
   this.version = version;
   this.name = 'InstaSynchP Bibby';
   this.settings = [{
-    'label': 'Wallcounter limit notifications',
-    'id': 'wallcounter-hide',
-    'type': 'checkbox',
-    'default': false,
-    'section': ['Bibby']
+    label: 'Wallcounter limit notifications',
+    id: 'wallcounter-hide',
+    type: 'checkbox',
+    default: false,
+    section: ['Bibby']
   }];
   this.isBibby = false;
 }
 
 Bibby.prototype.overwriteWallCreateFormat = function () {
-  "use strict";
-  var th = this,
-    wallcounter = window.plugins.wallcounter;
+  'use strict';
+  var wallcounter = window.plugins.wallcounter;
   if (isUdef(wallcounter)) {
     return;
   }
   var oldCreateFormat = wallcounter.Wall.prototype.createFormat;
   wallcounter.Wall.prototype.createFormat = function () {
-    var thth = this;
-    if (thth.duration > 60 * 60) {
-      return '<span style="color:red">' + oldCreateFormat.apply(thth, arguments) + '</span>';
+    var _this = this;
+    if (_this.duration > 60 * 60) {
+      return '<span style=\'color:red\'>' +
+      oldCreateFormat.apply(_this, arguments) +
+        '</span>';
     } else {
-      return oldCreateFormat.apply(thth, arguments);
+      return oldCreateFormat.apply(_this, arguments);
     }
   };
 };
 
 Bibby.prototype.checkWall = function (video) {
-  "use strict";
+  'use strict';
   var message;
   var wall;
   var wallcounter = window.plugins.wallcounter;
@@ -68,35 +69,33 @@ Bibby.prototype.checkWall = function (video) {
 
 
 Bibby.prototype.wallcounterNotification = function () {
-  "use strict";
-  var th = this;
-  events.on(th, 'AddVideo', th.checkWall);
+  'use strict';
+  events.on(this, 'AddVideo', this.checkWall);
 };
 
 Bibby.prototype.executeOnce = function () {
-  "use strict";
-  var th = this;
-  th.isBibby = (window.room.roomName.toLowerCase() === 'bibby');
-  if (!th.isBibby) {
+  'use strict';
+  var _this = this;
+  _this.isBibby = (window.room.roomName.toLowerCase() === 'bibby');
+  if (!_this.isBibby) {
     return;
   }
-  th.overwriteWallCreateFormat();
+  _this.overwriteWallCreateFormat();
 };
 
 Bibby.prototype.postConnect = function () {
-  "use strict";
-  var th = this;
-  if (!th.isBibby) {
+  'use strict';
+  var _this = this;
+  if (!_this.isBibby) {
     return;
   }
-  th.wallcounterNotification();
+  _this.wallcounterNotification();
 };
 
 
 Bibby.prototype.resetVariables = function () {
-  "use strict";
-  var th = this;
-  events.unbind('AddVideo', th.checkWall);
+  'use strict';
+  events.unbind('AddVideo', this.checkWall);
 };
 
 window.plugins = window.plugins || {};
