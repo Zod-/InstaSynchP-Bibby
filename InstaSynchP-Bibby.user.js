@@ -22,9 +22,9 @@ function Bibby(version) {
   this.name = 'InstaSynchP Bibby';
   this.settings = [{
     label: 'Wallcounter limit notifications',
-    id: 'wallcounter-hide',
+    id: 'wallcounter-limit-notify',
     type: 'checkbox',
-    default: false,
+    default: true,
     section: ['Bibby']
   }];
   this.isBibby = false;
@@ -41,7 +41,7 @@ Bibby.prototype.overwriteWallCreateFormat = function () {
     var _this = this;
     if (_this.duration > 60 * 60) {
       return '<span style=\'color:red\'>' +
-      oldCreateFormat.apply(_this, arguments) +
+        oldCreateFormat.apply(_this, arguments) +
         '</span>';
     } else {
       return oldCreateFormat.apply(_this, arguments);
@@ -56,7 +56,9 @@ Bibby.prototype.checkWall = function (video) {
   var wallcounter = window.plugins.wallcounter;
   var addedby = video.addedby.toLowerCase();
 
-  if (isUdef(wallcounter) || thisUser().username.toLowerCase() === addedby) {
+  if (!gmc.get('wallcounter-limit-notify') ||
+    isUdef(wallcounter) ||
+    thisUser().username.toLowerCase() === addedby) {
     return;
   }
   wall = wallcounter.getWallsForUsernames(addedby)[0];
