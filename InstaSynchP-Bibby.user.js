@@ -50,14 +50,16 @@ Bibby.prototype.overwriteWallCreateFormat = function () {
 
 Bibby.prototype.checkWall = function (video) {
   "use strict";
-  var message, wall,
-    wallcounter = window.plugins.wallcounter;
+  var message;
+  var wall;
+  var wallcounter = window.plugins.wallcounter;
+  var addedby = video.addedby.toLowerCase();
 
-  if (isUdef(wallcounter)) {
+  if (isUdef(wallcounter) || thisUser().username.toLowerCase() === addedby) {
     return;
   }
-  wall = wallcounter.walls[video.addedby.toLowerCase()];
-  if (isUdef(wall) || wall.duration < 60 * 60) {
+  wall = wallcounter.getWallsForUsernames(addedby)[0];
+  if (wall.duration < 60 * 60) {
     return;
   }
   message = wall.format('Wallcounter {0}', '{1}', '{2}');
