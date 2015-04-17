@@ -61,7 +61,7 @@ Bibby.prototype.checkWall = function (video) {
     thisUser().username.toLowerCase() === addedby) {
     return;
   }
-  wall = wallcounter.getWallsForUsernames(addedby)[0];
+  wall = wallcounter.getWallForUsername(addedby);
   if (wall.duration < 60 * 60) {
     return;
   }
