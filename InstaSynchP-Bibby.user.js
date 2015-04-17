@@ -57,6 +57,7 @@ Bibby.prototype.checkWall = function (video) {
   var addedby = video.addedby.toLowerCase();
 
   if (!gmc.get('wallcounter-limit-notify') ||
+    gmc.get('add-video-log', false) ||
     isUdef(wallcounter) ||
     thisUser().username.toLowerCase() === addedby) {
     return;
