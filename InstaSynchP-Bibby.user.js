@@ -3,7 +3,7 @@
 // @namespace   InstaSynchP
 // @description Bibby specific changes
 
-// @version     1.1.1
+// @version     1.1.2
 // @author      Zod-
 // @source      https://github.com/Zod-/InstaSynchP-Bibby
 // @license     MIT
@@ -102,4 +102,4 @@ Bibby.prototype.resetVariables = function () {
 };
 
 window.plugins = window.plugins || {};
-window.plugins.bibby = new Bibby('1.1.1');
+window.plugins.bibby = new Bibby('1.1.2');
